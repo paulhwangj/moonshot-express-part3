@@ -16,7 +16,7 @@ CREATE TABLE Product (
     product_id      INT IDENTITY (1,1) NOT NULL,
     description     VARCHAR(1000),
     size            VARCHAR(6),
-    price           INT,
+    price           FLOAT,
 
     -- limits options that size can be set to
     CHECK (size in ('Small', 'Medium', 'Large')),   
@@ -62,7 +62,7 @@ CREATE TABLE ProductInPurchase (
     product_id      INT,
     purchase_id     INT,
     quantity        INT,
-    subtotal        INT,
+    subtotal        FLOAT,
 
     CONSTRAINT [PK_PRODUCT_IN_PURCHASE] PRIMARY KEY (product_id, purchase_id),
     CONSTRAINT [FK_PRODUCT_IN_PURCHASE] FOREIGN KEY (product_id) REFERENCES Product(product_id),
@@ -86,12 +86,49 @@ CREATE TABLE CustomerRewardEarn (
     CONSTRAINT [FK_REWARD_BEING_GIVEN] FOREIGN KEY (reward_id) REFERENCES Reward(reward_id),
 );
 
+-- Inserting sample data into the tables
+INSERT INTO Customer (first_name, last_name, customer_since) VALUES
+    ('Joseph', 'Mulligan', '2020-03-05'),
+    ('Paul', 'Hwang', '2020-03-22');
+
+INSERT INTO Reward (badge_name, level) VALUES
+    ('Three of Kind', 1),
+    ('Five Different', 2);
+
+INSERT INTO CustomerRewardEarn (customer_id, reward_id) VALUES
+    (1,1),
+    (1,2);
+
+INSERT INTO Product (description, size, price) VALUES
+    ('Black Coffee', 'Small', 1.59),
+    ('Black Coffee', 'Medium', 1.79),
+    ('Black Coffee', 'Large', 1.99),
+    ('Extra shot of expresso', NULL, 0.50);
+
+INSERT INTO Store (street_address, city, us_state, zipcode) VALUES
+    ('12 Fake Street', 'Oshkosh', 'WI', 54901),
+    ('21 Real Street', 'Oshkosh', 'WI', 54904);
+
+INSERT INTO Barista (first_name, last_name, hire_date, store_id) VALUES
+    ('John', 'Green', '2020-02-25', 1),
+    ('Tree', 'Trunk', '2020-02-20', 2);
+
+INSERT INTO Purchase (time_date_purchase, sales_tax, barista_id, customer_id, store_id) VALUES
+    (convert(datetime, '2020-12-02 12:01:05', 102), 0.05, 1, 1, 1),
+    (convert(datetime, '2020-12-02 12:15:24', 102), 0.05, 2, 2, 2);
+
+INSERT INTO ProductInPurchase (product_id, purchase_id, quantity, subtotal) VALUES
+    (1, 1, 2, 3.18),
+    (2, 1, 1, 1.79),
+    (3, 2, 1, 1.99),
+    (4, 2, 1, 0.50);
+
 -- Dropping all the tables
-DROP TABLE CustomerRewardEarn;
-DROP TABLE Reward;
-DROP TABLE ProductInPurchase;
-DROP TABLE Purchase;
-DROP TABLE Barista;
-DROP TABLE Store;
-DROP TABLE Product;
-DROP TABLE Customer;
+-- DROP TABLE CustomerRewardEarn;
+-- DROP TABLE Reward;
+-- DROP TABLE ProductInPurchase;
+-- DROP TABLE Purchase;
+-- DROP TABLE Barista;
+-- DROP TABLE Store;
+-- DROP TABLE Product;
+-- DROP TABLE Customer;
